@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/cerrarAgregarFlotante"
+            android:id="@+id/cerrarClock"
             android:layout_width="40sp"
             android:layout_height="40sp"
             android:layout_gravity="end"
@@ -29,7 +29,10 @@
             android:hint="Fecha"
             android:layout_marginHorizontal="10sp"
             android:layout_marginBottom="5sp"
-            android:inputType="date" />
+            android:inputType="date"
+            android:clickable="true"
+            android:focusable="false"
+            />
 
         <EditText
             android:id="@+id/horaEntradaTxtAgregar"
@@ -40,6 +43,8 @@
             android:inputType="time"
             android:layout_marginHorizontal="10sp"
             android:layout_marginBottom="5sp"
+            android:clickable="true"
+            android:focusable="false"
             />
 
         <EditText
@@ -51,6 +56,8 @@
             android:inputType="time"
             android:layout_marginHorizontal="10sp"
             android:layout_marginBottom="55sp"
+            android:clickable="true"
+            android:focusable="false"
             />
 
         <Button

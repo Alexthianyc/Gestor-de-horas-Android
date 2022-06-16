@@ -130,19 +130,19 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Contrasenia debe tener mas de 6 caracteres", Toast.LENGTH_SHORT).show();
                     } else {
                         mAuth.signInWithEmailAndPassword(txtEmail, txtPassword)
-                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if(task.isSuccessful()) {
-                                            email.setText("");
-                                            password.setText("");
-                                            finish();
-                                            startActivity(new Intent(MainActivity.this,StartActivity.class));
-                                        }else{
-                                            Toast.makeText(getApplicationContext(), "Error: correo o contrasenia invalida", Toast.LENGTH_SHORT).show();
-                                        }
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if(task.isSuccessful()) {
+                                        email.setText("");
+                                        password.setText("");
+                                        finish();
+                                        startActivity(new Intent(MainActivity.this,StartActivity.class));
+                                    }else{
+                                        Toast.makeText(getApplicationContext(), "Error: correo o contrasenia invalida", Toast.LENGTH_SHORT).show();
                                     }
-                                });
+                                }
+                            });
                     }
                 }
             }
