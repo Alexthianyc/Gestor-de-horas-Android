@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#DDDDDD"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_gravity="end"
+            android:layout_margin="10sp"
+            app:srcCompat="@drawable/ic_cerrar_foreground"
+            tools:ignore="ImageContrastCheck" />
+
+        <EditText
+            android:id="@+id/nombreRegistrarTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Nombre"
+            android:layout_marginHorizontal="10sp"
+            android:layout_marginBottom="5sp"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/emailRegistrarTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Correo"
+            android:layout_marginHorizontal="10sp"
+            android:layout_marginBottom="5sp"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/PasswordRegistrarTxt"
+            android:hint="Contraseña"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:layout_marginHorizontal="10sp"
+            android:layout_marginBottom="5sp"
+            />
+
+        <EditText
+            android:id="@+id/PasswordConfirmarRegistrarTxt"
+            android:hint="Repetir contraseña"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:layout_marginHorizontal="10sp"
+            android:layout_marginBottom="55sp"
+            />
+
+        <Button
+            android:id="@+id/userNew"
+            android:backgroundTint="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10sp"
+            android:layout_marginBottom="10sp"
+            android:text="resgistrar" />
+
+    </LinearLayout>
+
+</LinearLayout>

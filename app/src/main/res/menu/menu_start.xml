@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/Listado_item"
+        android:icon="@drawable/registros"
+        android:title="Listado"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/logout_item"
+        android:icon="@drawable/logout"
+        android:title="Cerrar sesion"
+        app:showAsAction="always"
+        />
+</menu>
