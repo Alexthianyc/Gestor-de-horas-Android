@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#DDDDDD"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/cerrarActualizar"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_gravity="end"
+            android:layout_margin="10sp"
+            app:srcCompat="@drawable/ic_cerrar_foreground"
+            tools:ignore="ImageContrastCheck" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:layout_marginHorizontal="10sp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Numero de registro"
+                android:layout_marginRight="15sp"
+                android:clickable="false"
+                android:focusable="false"
+                />
+
+            <EditText
+                android:id="@+id/numeroRegistroActualizar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10sp"
+                android:layout_marginBottom="5sp"
+                android:clickable="false"
+                android:ems="11"
+                android:textAlignment="center"
+                android:hint="Numero de registro"
+                android:focusable="false"
+                android:inputType="date" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/fechaActualizarTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Fecha"
+            android:layout_marginHorizontal="10sp"
+            android:layout_marginBottom="5sp"
+            android:inputType="date"
+            android:focusable="false"
+            android:clickable="false"
+            />
+
+        <EditText
+            android:id="@+id/horaEntradaTxteditar"
+            android:hint="Hora de inicio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="time"
+            android:layout_marginHorizontal="10sp"
+            android:layout_marginBottom="5sp"
+            android:clickable="true"
+            android:focusable="false"
+            />
+
+        <EditText
+            android:id="@+id/horaSalidaTxtEditar"
+            android:hint="Hora de salida"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="time"
+            android:layout_marginHorizontal="10sp"
+            android:layout_marginBottom="55sp"
+            android:clickable="true"
+            android:focusable="false"
+            />
+
+        <Button
+            android:id="@+id/actualizarBtnRegistro"
+            android:backgroundTint="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10sp"
+            android:layout_marginBottom="10sp"
+            android:text="Actualizar" />
+
+    </LinearLayout>
+
+</LinearLayout>
