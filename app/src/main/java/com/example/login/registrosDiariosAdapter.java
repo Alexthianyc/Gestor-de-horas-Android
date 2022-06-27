@@ -2,6 +2,7 @@ package com.example.login;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class registrosDiariosAdapter extends RecyclerView.Adapter<registrosDiariosAdapter.ViewHolder>{
 
@@ -57,9 +60,8 @@ public class registrosDiariosAdapter extends RecyclerView.Adapter<registrosDiari
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, @SuppressLint("RecyclerView") final int position) {
-        viewHolder.numero.setText("Numero de registo: " + localDataSet.get(position).numero);
-        viewHolder.fecha.setText("Fecha: " + localDataSet.get(position).fecha);
-        String horaE,horaS,minE,minS;
+
+        String horaE,horaS,minE,minS,horaT,minT;
         if(localDataSet.get(position).horaEntrada < 10){
             horaE = "0" + localDataSet.get(position).horaEntrada;
         }else{
@@ -80,12 +82,25 @@ public class registrosDiariosAdapter extends RecyclerView.Adapter<registrosDiari
         }else{
             minS = "" + localDataSet.get(position).minutoSalida;
         }
-        viewHolder.horaIni.setText("Hora de inicio: " + horaE + ":" + minE);
-        viewHolder.horaFIn.setText("Hora de salida: " + horaS + ":" + minS);
 
         int horasTrabajadas = (int) Math.floor(localDataSet.get(position).minutosTotal / 60);
         int minutosTrabajados = localDataSet.get(position).minutosTotal % 60;
-        viewHolder.laboradas.setText("Tiempo laborado: " + horasTrabajadas + ":" + minutosTrabajados);
+        if(localDataSet.get(position).minutoEntrada < 10){
+            horaT = "0" + horasTrabajadas;
+        }else{
+            horaT = "" + horasTrabajadas;
+        }
+        if(localDataSet.get(position).minutoSalida < 10){
+            minT = "0" + minutosTrabajados;
+        }else{
+            minT = "" + minutosTrabajados;
+        }
+
+        viewHolder.numero.setText("Numero de registo: " + localDataSet.get(position).numero);
+        viewHolder.fecha.setText("Fecha: " + localDataSet.get(position).fecha);
+        viewHolder.horaIni.setText("Hora de inicio: " + horaE + ":" + minE);
+        viewHolder.horaFIn.setText("Hora de salida: " + horaS + ":" + minS);
+        viewHolder.laboradas.setText("Tiempo laborado: " + horaT + ":" + minT);
 
         viewHolder.eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,11 +194,62 @@ public class registrosDiariosAdapter extends RecyclerView.Adapter<registrosDiari
                 horaSali.setText(horaS+":"+minS);
                 numero.setText(String.valueOf(localDataSet.get(position).numero));
 
+                horaIni.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        seleccionarHora(horaIni,"Hora de entrada",view);
+                    }
+                });
+
+                horaSali.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        seleccionarHora(horaSali,"Hora de salida",view);
+                    }
+                });
+
                 Button actualizar = view.findViewById(R.id.actualizarBtnRegistro);
                 actualizar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(view.getContext(), "Actualizando", Toast.LENGTH_SHORT).show();
+                        // codigo para actualizar
+                        String[] horaEntrada = horaIni.getText().toString().split(":");
+                        String[] horaSalida = horaSali.getText().toString().split(":");
+                        int horaEntra, horaSale, minutoEntra, minutoSale;
+                        int minutosI, minutosF, diferencia;
+                        horaEntra = Integer.parseInt(horaEntrada[0]);
+                        minutoEntra = Integer.parseInt(horaEntrada[1]);
+                        horaSale = Integer.parseInt(horaSalida[0]);
+                        minutoSale = Integer.parseInt(horaSalida[1]);
+
+                        minutosI = (horaEntra * 60) + minutoEntra;
+                        minutosF = (horaSale * 60) + minutoSale;
+
+                        if (minutosF < minutosI) {
+                            Toast.makeText(view.getContext(), "Error: la hora de salida es mayor a la de entrada", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // diferencias de minutos
+                            diferencia = minutosF - minutosI;
+
+                            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            String uid = user.getUid();
+
+                            mDatabase.child(uid).child(fecha.getText().toString())
+                                    .child(numero.getText().toString()).child("horaEntrada").setValue(horaEntra);
+                            mDatabase.child(uid).child(fecha.getText().toString())
+                                    .child(numero.getText().toString()).child("horaSalida").setValue(horaSale);
+                            mDatabase.child(uid).child(fecha.getText().toString())
+                                    .child(numero.getText().toString()).child("minutoEntrada").setValue(minutoEntra);
+                            mDatabase.child(uid).child(fecha.getText().toString())
+                                    .child(numero.getText().toString()).child("minutoSalida").setValue(minutoSale);
+                            mDatabase.child(uid).child(fecha.getText().toString())
+                                    .child(numero.getText().toString()).child("minutosTotal").setValue(diferencia);
+
+
+                            Toast.makeText(view.getContext(), "Actualizado con exito", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
                     }
                 });
             }
@@ -201,10 +267,31 @@ public class registrosDiariosAdapter extends RecyclerView.Adapter<registrosDiari
         return new ViewHolder(view);
     }
 
-
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return localDataSet.size();
+    }
+
+    public void seleccionarHora(EditText espace,String titulo,View view){
+        final int[] hora = new int[1];
+        final int[] minuto = new int[1];
+
+        TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+                hora[0] = hour;
+                minuto[0] = minute;
+                espace.setText(String.format(Locale.getDefault(),"%02d:%02d", hora[0], minuto[0]));
+            }
+        };
+
+        String horaEdit = espace.getText().toString();
+        String[] horaEditHM = horaEdit.split(":");
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(view.getContext(),onTimeSetListener,
+                Integer.parseInt(horaEditHM[0]), Integer.parseInt(horaEditHM[1]),false);
+        timePickerDialog.setTitle(titulo);
+        timePickerDialog.show();
     }
 }
