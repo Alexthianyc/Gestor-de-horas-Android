@@ -6,6 +6,10 @@ plugins {
 android {
     compileSdk 32
 
+    buildFeatures {
+        compose true
+    }
+
     defaultConfig {
         applicationId "com.example.login"
         minSdk 21
@@ -31,7 +35,7 @@ android {
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.firebase:firebase-analytics:20.1.2'
     implementation 'com.google.firebase:firebase-database:20.0.5'
@@ -39,16 +43,13 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    // autentificacion de firebase
-    // Import the BoM for the Firebase platform
+    // firebase
     implementation platform('com.google.firebase:firebase-bom:29.3.1')
-    // Declare the dependency for the Firebase Authentication library
-    // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-auth'
-    // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
-    // Declare the dependency for the Cloud Storage library
-    // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-storage'
 
+
+    implementation "androidx.compose.material3:material3:1.0.0-alpha13"
+    implementation "androidx.compose.material3:material3-window-size-class:1.0.0-alpha13"
 }

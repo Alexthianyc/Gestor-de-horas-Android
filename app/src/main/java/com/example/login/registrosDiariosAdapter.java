@@ -85,12 +85,12 @@ public class registrosDiariosAdapter extends RecyclerView.Adapter<registrosDiari
 
         int horasTrabajadas = (int) Math.floor(localDataSet.get(position).minutosTotal / 60);
         int minutosTrabajados = localDataSet.get(position).minutosTotal % 60;
-        if(localDataSet.get(position).minutoEntrada < 10){
+        if(horasTrabajadas < 10){
             horaT = "0" + horasTrabajadas;
         }else{
             horaT = "" + horasTrabajadas;
         }
-        if(localDataSet.get(position).minutoSalida < 10){
+        if(minutosTrabajados < 10){
             minT = "0" + minutosTrabajados;
         }else{
             minT = "" + minutosTrabajados;
@@ -245,7 +245,6 @@ public class registrosDiariosAdapter extends RecyclerView.Adapter<registrosDiari
                                     .child(numero.getText().toString()).child("minutoSalida").setValue(minutoSale);
                             mDatabase.child(uid).child(fecha.getText().toString())
                                     .child(numero.getText().toString()).child("minutosTotal").setValue(diferencia);
-
 
                             Toast.makeText(view.getContext(), "Actualizado con exito", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();

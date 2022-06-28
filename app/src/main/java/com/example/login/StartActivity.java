@@ -43,7 +43,6 @@ public class StartActivity extends AppCompatActivity {
     int hora,minuto;
     public static int total;
     RecyclerView recyclerView;
-    registrosDiariosAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
