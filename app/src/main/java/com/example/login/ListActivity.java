@@ -170,7 +170,7 @@ public class ListActivity extends AppCompatActivity {
                             long resto = daysBetween % 7;
                             long horasTrabajar = 0;
                             long semanas = 0;
-                            long horasTrabajadas = 0;
+                            final long[] horasTrabajadas = {0};
 
                             Date aux2;
                             aux2 = sumarRestarDiasFecha(date2,1);
@@ -261,7 +261,9 @@ public class ListActivity extends AppCompatActivity {
                                                         item.minutosTotal = Integer.parseInt(String.valueOf(child.child("minutosTotal").getValue()));
                                                         list.add(item);
 
-                                                        Log.e("mensaje",String.valueOf(horasTrabajadas));
+                                                        int minutos = Integer.parseInt(String.valueOf(child.child("minutosTotal").getValue()));
+                                                        horasTrabajadas[0] += minutos;
+                                                        Log.e("mensajeDentro",String.valueOf(horasTrabajadas[0]));
                                                     }
                                                 }
                                             }
@@ -270,7 +272,7 @@ public class ListActivity extends AppCompatActivity {
                                         aux = sumarRestarDiasFecha(aux,1);
                                     }
 
-                                    //Log.e("mensajeFuera",String.valueOf(horasTrabajadas));
+                                    Log.e("mensajeFuera",String.valueOf(horasTrabajadas[0]));
                                     //Toast.makeText(ListActivity.this, "Horas trabajadas: " + horasTrabajadas, Toast.LENGTH_SHORT).show();
 
                                 }
