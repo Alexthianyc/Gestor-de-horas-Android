@@ -10,6 +10,8 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +45,7 @@ public class ListActivity extends AppCompatActivity {
     Button filtrar;
     EditText fechaI,fechaF;
     TextView diasLaborar,diasLaborados,horasRestantes,horasExtras;
+    long horasTrabajadas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,15 +59,6 @@ public class ListActivity extends AppCompatActivity {
         diasLaborados = findViewById(R.id.textHorasLaborados);
         horasRestantes = findViewById(R.id.textHorasRestantes);
         horasExtras = findViewById(R.id.textHorasExtras);
-
-        /*
-        MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
-        // Titulo
-        builder.setTitleText("Ingrese un rango de fecha");
-        // Seleccionar dia de hoy por defecto
-        builder.setSelection(MaterialDatePicker.todayInUtcMilliseconds());
-        MaterialDatePicker materialDatePicker = builder.build();
-         */
 
         fechaI.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,14 +116,39 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+        diasLaborar.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onPositiveButtonClick(Object selection) {
-                fecha.setText(materialDatePicker.);
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                actulizarRestantesExtras();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
-         */
+
+        diasLaborados.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                actulizarRestantesExtras();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         filtrar.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -170,7 +189,7 @@ public class ListActivity extends AppCompatActivity {
                             long resto = daysBetween % 7;
                             long horasTrabajar = 0;
                             long semanas = 0;
-                            final long[] horasTrabajadas = {0};
+                            horasTrabajadas = 0;
 
                             Date aux2;
                             aux2 = sumarRestarDiasFecha(date2,1);
@@ -186,10 +205,11 @@ public class ListActivity extends AppCompatActivity {
                             // crear lista
                             ArrayList<Registro> list = new ArrayList<>();
                             list.clear();
+                            diasLaborados.setText("0");
 
                             if (finalMes || resto == 0 || inicioMes){
                                 if(finalMes || inicioMes){
-                                    Toast.makeText(ListActivity.this, "Final de mes o primer quincena", Toast.LENGTH_SHORT).show();
+                                    // Toast.makeText(ListActivity.this, "Final de mes o primer quincena", Toast.LENGTH_SHORT).show();
                                     // Codigo que cuente los dias sabado y domingo
                                     while (aux.getTime() < aux2.getTime()){
                                         LocalDate fechaAux = aux.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -215,6 +235,19 @@ public class ListActivity extends AppCompatActivity {
                                                         list.add(item);
 
                                                         //Log.e("mensaje",String.valueOf(horasTrabajadas));
+                                                        int minutos = Integer.parseInt(String.valueOf(child.child("minutosTotal").getValue()));
+                                                        horasTrabajadas += minutos;
+                                                    }
+
+                                                    // scote cuestiones
+                                                    diasLaborados.setText(String.valueOf(horasTrabajadas/60));
+
+                                                    Log.e("mensajeMin",String.valueOf(horasTrabajadas));
+                                                    Log.e("mensajeLista",String.valueOf(list.size()));
+                                                }else{
+                                                    int lab = Integer.parseInt(diasLaborados.getText().toString());
+                                                    if(lab == 0){
+                                                        diasLaborados.setText("0");
                                                     }
                                                 }
                                             }
@@ -262,8 +295,18 @@ public class ListActivity extends AppCompatActivity {
                                                         list.add(item);
 
                                                         int minutos = Integer.parseInt(String.valueOf(child.child("minutosTotal").getValue()));
-                                                        horasTrabajadas[0] += minutos;
-                                                        Log.e("mensajeDentro",String.valueOf(horasTrabajadas[0]));
+                                                        horasTrabajadas += minutos;
+                                                    }
+
+                                                    // scote cuestiones
+                                                    diasLaborados.setText(String.valueOf(horasTrabajadas/60));
+
+                                                    Log.e("mensajeMin",String.valueOf(horasTrabajadas));
+                                                    Log.e("mensajeLista",String.valueOf(list.size()));
+                                                }else{
+                                                    int lab = Integer.parseInt(diasLaborados.getText().toString());
+                                                    if(lab == 0){
+                                                        diasLaborados.setText("0");
                                                     }
                                                 }
                                             }
@@ -271,10 +314,6 @@ public class ListActivity extends AppCompatActivity {
                                         // formattedDate ya recorre todas las fechas falta consulta
                                         aux = sumarRestarDiasFecha(aux,1);
                                     }
-
-                                    Log.e("mensajeFuera",String.valueOf(horasTrabajadas[0]));
-                                    //Toast.makeText(ListActivity.this, "Horas trabajadas: " + horasTrabajadas, Toast.LENGTH_SHORT).show();
-
                                 }
                             }else{
                                 Toast.makeText(ListActivity.this, "Error: El rango debe ser multiplo de 7 o una quincena", Toast.LENGTH_SHORT).show();
@@ -289,6 +328,21 @@ public class ListActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void actulizarRestantesExtras(){
+        int dlr = Integer.parseInt(diasLaborar.getText().toString());
+        int dls = Integer.parseInt(diasLaborados.getText().toString());
+        int resta = 0;
+        if(dlr > dls){
+            resta = dlr-dls;
+            horasRestantes.setText(""+resta);
+            horasExtras.setText("0");
+        }else{
+            resta = dls-dlr;
+            horasExtras.setText(""+resta);
+            horasRestantes.setText("0");
+        }
     }
 
     public Date sumarRestarDiasFecha(Date fecha, int dias){

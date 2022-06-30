@@ -267,7 +267,7 @@ public class StartActivity extends AppCompatActivity {
                                     item.horaEntrada = Integer.parseInt(String.valueOf(child.child("horaEntrada").getValue()));
                                     item.horaSalida = Integer.parseInt(String.valueOf(child.child("horaSalida").getValue()));
                                     item.minutoEntrada = Integer.parseInt(String.valueOf(child.child("minutoEntrada").getValue()));
-                                    item.minutoSalida = Integer.parseInt(String.valueOf(child.child("minutoEntrada").getValue()));
+                                    item.minutoSalida = Integer.parseInt(String.valueOf(child.child("minutoSalida").getValue()));
                                     item.numero = Integer.parseInt(String.valueOf(child.child("numero").getValue()));
                                     item.minutosTotal = Integer.parseInt(String.valueOf(child.child("minutosTotal").getValue()));
                                     list.add(item);
