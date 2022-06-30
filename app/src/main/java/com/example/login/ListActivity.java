@@ -10,18 +10,30 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +42,7 @@ public class ListActivity extends AppCompatActivity {
 
     Button filtrar;
     EditText fechaI,fechaF;
+    TextView diasLaborar,diasLaborados,horasRestantes,horasExtras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +52,10 @@ public class ListActivity extends AppCompatActivity {
         filtrar = findViewById(R.id.btnFiltrar);
         fechaI = findViewById(R.id.editTextDate);
         fechaF = findViewById(R.id.editTextDate2);
+        diasLaborar = findViewById(R.id.textHorasRequeridos);
+        diasLaborados = findViewById(R.id.textHorasLaborados);
+        horasRestantes = findViewById(R.id.textHorasRestantes);
+        horasExtras = findViewById(R.id.textHorasExtras);
 
         /*
         MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
@@ -144,7 +161,6 @@ public class ListActivity extends AppCompatActivity {
                             boolean finalMes = false;
                             boolean fechaFinalMes = (dia == Integer.parseInt(String.valueOf(mes.getDate())));
                             boolean finalMesDia = (daysBetween == 16 || daysBetween == 14 || daysBetween == 13 || daysBetween == 15);
-
                             if(finalMesDia && fechaFinalMes){
                                 finalMes = true;
                             }
@@ -153,20 +169,110 @@ public class ListActivity extends AppCompatActivity {
                             // obtenemos true si es numero de dias es multiplo de 7
                             long resto = daysBetween % 7;
                             long horasTrabajar = 0;
+                            long semanas = 0;
+                            long horasTrabajadas = 0;
 
+                            Date aux2;
+                            aux2 = sumarRestarDiasFecha(date2,1);
+
+                            Date aux;
+                            aux = sumarRestarDiasFecha(date1,0);
                             // Toast.makeText(ListActivity.this, ""+Integer.parseInt(fechaIni[0]), Toast.LENGTH_SHORT).show();
+
+                            // obtener uid de usuario
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            String uid = user.getUid();
+
+                            // crear lista
+                            ArrayList<Registro> list = new ArrayList<>();
+                            list.clear();
 
                             if (finalMes || resto == 0 || inicioMes){
                                 if(finalMes || inicioMes){
                                     Toast.makeText(ListActivity.this, "Final de mes o primer quincena", Toast.LENGTH_SHORT).show();
                                     // Codigo que cuente los dias sabado y domingo
+                                    while (aux.getTime() < aux2.getTime()){
+                                        LocalDate fechaAux = aux.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                                        String formattedDate = fechaAux.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+                                        // Codigo de llenar arrego del rango
+                                        // llenar lista
+                                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                                        mDatabase.child(uid).child(formattedDate).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                if(task.getResult().hasChildren()){
+                                                    // actualizar listaRegistros
+                                                    for (DataSnapshot child : task.getResult().getChildren()) {
+                                                        Registro item = new Registro();
+                                                        item.fecha = String.valueOf(child.child("fecha").getValue());
+                                                        item.horaEntrada = Integer.parseInt(String.valueOf(child.child("horaEntrada").getValue()));
+                                                        item.horaSalida = Integer.parseInt(String.valueOf(child.child("horaSalida").getValue()));
+                                                        item.minutoEntrada = Integer.parseInt(String.valueOf(child.child("minutoEntrada").getValue()));
+                                                        item.minutoSalida = Integer.parseInt(String.valueOf(child.child("minutoEntrada").getValue()));
+                                                        item.numero = Integer.parseInt(String.valueOf(child.child("numero").getValue()));
+                                                        item.minutosTotal = Integer.parseInt(String.valueOf(child.child("minutosTotal").getValue()));
+                                                        list.add(item);
+
+                                                        //Log.e("mensaje",String.valueOf(horasTrabajadas));
+                                                    }
+                                                }
+                                            }
+                                        });
+                                        // formattedDate ya recorre todas las fechas falta consulta
+                                        if(aux.getDay() == 6){
+                                            horasTrabajar += 4;
+                                        }else if(aux.getDay() == 0){
+                                        }else{
+                                            horasTrabajar += 8;
+                                        }
+
+                                        aux = sumarRestarDiasFecha(aux,1);
+                                    }
+
+                                    diasLaborar.setText(String.valueOf(horasTrabajar));
                                     // date2.getDay() - 0 domingo, 1 lunes ... 6 sabado.
 
                                 }else{
-                                    long semanas = daysBetween / 7;
+                                    semanas = daysBetween / 7;
                                     horasTrabajar = 44 * semanas;
+                                    diasLaborar.setText(String.valueOf(horasTrabajar));
 
-                                    Toast.makeText(ListActivity.this, "Horas requeridas: "+horasTrabajar, Toast.LENGTH_SHORT).show();
+                                    while (aux.getTime() < aux2.getTime()){
+                                        LocalDate fechaAux = aux.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                                        String formattedDate = fechaAux.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+
+                                        // Codigo de llenar arrego del rango
+                                        // llenar lista
+                                        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                                        mDatabase.child(uid).child(formattedDate).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                if(task.getResult().hasChildren()){
+                                                    // actualizar listaRegistros
+                                                    for (DataSnapshot child : task.getResult().getChildren()) {
+                                                        Registro item = new Registro();
+                                                        item.fecha = String.valueOf(child.child("fecha").getValue());
+                                                        item.horaEntrada = Integer.parseInt(String.valueOf(child.child("horaEntrada").getValue()));
+                                                        item.horaSalida = Integer.parseInt(String.valueOf(child.child("horaSalida").getValue()));
+                                                        item.minutoEntrada = Integer.parseInt(String.valueOf(child.child("minutoEntrada").getValue()));
+                                                        item.minutoSalida = Integer.parseInt(String.valueOf(child.child("minutoEntrada").getValue()));
+                                                        item.numero = Integer.parseInt(String.valueOf(child.child("numero").getValue()));
+                                                        item.minutosTotal = Integer.parseInt(String.valueOf(child.child("minutosTotal").getValue()));
+                                                        list.add(item);
+
+                                                        Log.e("mensaje",String.valueOf(horasTrabajadas));
+                                                    }
+                                                }
+                                            }
+                                        });
+                                        // formattedDate ya recorre todas las fechas falta consulta
+                                        aux = sumarRestarDiasFecha(aux,1);
+                                    }
+
+                                    //Log.e("mensajeFuera",String.valueOf(horasTrabajadas));
+                                    //Toast.makeText(ListActivity.this, "Horas trabajadas: " + horasTrabajadas, Toast.LENGTH_SHORT).show();
+
                                 }
                             }else{
                                 Toast.makeText(ListActivity.this, "Error: El rango debe ser multiplo de 7 o una quincena", Toast.LENGTH_SHORT).show();
@@ -182,6 +288,13 @@ public class ListActivity extends AppCompatActivity {
             }
         });
     }
+
+    public Date sumarRestarDiasFecha(Date fecha, int dias){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha); // Configuramos la fecha que se recibe
+        calendar.add(Calendar.DAY_OF_YEAR, dias);  // numero de días a añadir, o restar en caso de días<0
+        return calendar.getTime(); // Devuelve el objeto Date con los nuevos días añadidos
+        }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

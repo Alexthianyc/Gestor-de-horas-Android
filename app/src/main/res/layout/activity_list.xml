@@ -7,41 +7,144 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15sp"
-        android:layout_marginTop="20sp"
-        android:orientation="horizontal"
-        tools:ignore="MissingConstraints">
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-        <EditText
-            android:id="@+id/editTextDate"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:clickable="true"
-            android:focusable="false"
-            android:hint="Fecha inicio"
-            android:textAlignment="center"
-            android:inputType="date" />
+            android:layout_marginHorizontal="15sp"
+            android:layout_marginTop="20sp"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
 
-        <EditText
-            android:id="@+id/editTextDate2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10sp"
-            android:layout_weight="2"
-            android:clickable="true"
-            android:focusable="false"
-            android:hint="Fecha final"
-            android:textAlignment="center"
-            android:inputType="date" />
+            <EditText
+                android:id="@+id/editTextDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="Fecha inicio"
+                android:inputType="date"
+                android:textAlignment="center" />
 
-        <Button
-            android:id="@+id/btnFiltrar"
-            android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/editTextDate2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10sp"
+                android:layout_weight="2"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="Fecha final"
+                android:inputType="date"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/btnFiltrar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/black"
+                android:text="Filtrar" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/black"
-            android:text="Filtrar" />
+            android:orientation="vertical"
+            android:layout_marginHorizontal="15sp"
+            android:layout_marginTop="30sp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Horas requeridas" />
+
+                <TextView
+                    android:id="@+id/textHorasRequeridos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="5sp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Horas laboradas" />
+
+                <TextView
+                    android:id="@+id/textHorasLaborados"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="5sp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Horas restantes" />
+
+                <TextView
+                    android:id="@+id/textHorasRestantes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="5sp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Horas extras" />
+
+                <TextView
+                    android:id="@+id/textHorasExtras"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
